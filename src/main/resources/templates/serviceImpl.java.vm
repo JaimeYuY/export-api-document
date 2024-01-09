@@ -1,0 +1,64 @@
+package ${package.ServiceImpl};
+
+import cn.hutool.core.bean.BeanUtil;
+import ${package.base_packages}.common.ActionResult;
+import ${package.base_packages}.common.PageResult;
+import ${package.base_packages}.constants.ResultCode;
+import ${package.Entity}.${entity};
+import ${package.Mapper}.${table.mapperName};
+import ${package.Service}.${table.serviceName};
+import ${superServiceImplClassPackage};
+import ${package.qo_packages}.${entity}Query;
+import ${package.vo_packages}.${entity}VO;
+import ${package.dto_packages}.${entity}DTO;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import javax.annotation.Resource;
+import java.util.List;
+
+
+/**
+ * $!{table.comment} 服务实现类
+ *
+ * @author ${author}
+ * @time ${date}
+ */
+@Service
+public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+
+    @Resource
+    private ${entity}Mapper mapper;
+
+    @Override
+    public PageResult<${entity}VO> page(${entity}Query query) {
+        List<${entity}VO> data = mapper.list${entity}(query);
+        int total = mapper.count${entity}(query);
+        PageResult<${entity}VO> pageResult = PageResult.success(data, total);
+        pageResult.setPageSize(query.getPageSize());
+        pageResult.setPageNum(query.getPageNum());
+        int pages = total % query.getPageSize() == 0 ? total / query.getPageSize() : total / query.getPageSize() + 1;
+        pageResult.setPages(pages);
+        return pageResult;
+    }
+
+    @Override
+    @Transactional
+    public ActionResult<Long> save(${entity}DTO dto) {
+        ${entity} entity = new ${entity}();
+        BeanUtil.copyProperties(dto, entity);
+        mapper.insert(entity);
+        return ActionResult.success(entity.getId());
+    }
+
+    @Override
+    @Transactional
+    public ActionResult<Long> update(${entity}DTO dto) {
+        if(null == dto.getId()) {
+            return ActionResult.error(ResultCode.PARAM_ERROR);
+        }
+        ${entity} entity = new ${entity}();
+        BeanUtil.copyProperties(dto, entity);
+        mapper.updateById(entity);
+        return ActionResult.success(entity.getId());
+    }
+}

@@ -1,0 +1,90 @@
+package ${package.Controller};
+
+import ${package.base_packages}.common.BaseController;
+import io.swagger.annotations.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import ${package.base_packages}.common.ActionResult;
+import ${package.base_packages}.common.PageResult;
+import ${package.base_packages}.domain.dto.${entity}DTO;
+import ${package.base_packages}.domain.entity.${entity};
+import ${package.base_packages}.domain.qo.${entity}Query;
+import ${package.base_packages}.domain.vo.${entity}VO;
+import ${package.base_packages}.service.${entity}Service;
+import org.springframework.web.bind.annotation.*;
+import javax.annotation.Resource;
+
+/**
+ * $!{table.comment} 前端控制器
+ *
+ * @author ${author}
+ * @time ${date}
+ */
+@Api(value = "$!{table.comment}接口", tags = {"$!{table.comment}相关接口"})
+#if(${restControllerStyle})
+@RestController
+#else
+@Controller
+#end
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/#if(${controllerMappingHyphenStyle})${controllerMappingHyphen}#else${table.entityPath}#end")
+public class ${table.controllerName} extends BaseController {
+
+    @Resource
+    private ${entity}Service service;
+
+    @ApiOperation(value = "$!{table.comment}列表", notes = "$!{table.comment}列表", consumes = "application/json", produces = "application/json", httpMethod = "GET")
+    @ApiResponses({@ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 50000, message = "service exception")
+    })
+    @GetMapping("/list")
+    public PageResult<${entity}VO> page(${entity}Query query) {
+        return service.page(query);
+    }
+
+    @ApiOperation(value = "获取$!{table.comment}信息", notes = "获取$!{table.comment}信息", consumes = "application/json", produces = "application/json", httpMethod = "GET")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "$!{table.comment}ID", required = true)
+    })
+    @ApiResponses({@ApiResponse(code = 200, message = "OK", response = ${entity}.class),
+            @ApiResponse(code = 50000, message = "service exception")
+    })
+    @GetMapping("/get/{id}")
+    public ActionResult<${entity}> get(@PathVariable Long id) {
+        ${entity} entity = service.getById(id);
+        if(null == entity) {
+            return ActionResult.error();
+        }
+        return ActionResult.success(entity);
+    }
+
+    @ApiOperation(value = "保存$!{table.comment}", notes = "保存$!{table.comment}", consumes = "application/json", produces = "application/json", httpMethod = "POST")
+    @ApiResponses({@ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 50000, message = "service exception")
+    })
+    @PostMapping("/save")
+    public ActionResult<Long> save(@RequestBody ${entity}DTO dto) {
+        return service.save(dto);
+    }
+
+    @ApiOperation(value = "更新$!{table.comment}", notes = "更新$!{table.comment}", consumes = "application/json", produces = "application/json", httpMethod = "POST")
+    @ApiResponses({@ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 50000, message = "service exception")
+    })
+    @PostMapping("/update")
+    public ActionResult<Long> update(@RequestBody ${entity}DTO dto) {
+        return service.update(dto);
+    }
+
+    @ApiOperation(value = "删除$!{table.comment}", notes = "删除$!{table.comment}", consumes = "application/json", produces = "application/json", httpMethod = "DELETE")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "$!{table.comment}ID", required = true)
+    })
+    @ApiResponses({@ApiResponse(code = 200, message = "OK"),
+            @ApiResponse(code = 50000, message = "service exception")
+    })
+    @DeleteMapping("/delete/{id}")
+    public ActionResult<Void> delete(@PathVariable Long id) {
+        service.removeById(id);
+        return ActionResult.success();
+    }
+
+}

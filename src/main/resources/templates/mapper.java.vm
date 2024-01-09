@@ -1,0 +1,37 @@
+package ${package.Mapper};
+
+import ${package.Entity}.${entity};
+import ${superMapperClassPackage};
+import ${package.qo_packages}.${entity}Query;
+import ${package.vo_packages}.${entity}VO;
+import java.util.List;
+import org.apache.ibatis.annotations.Param;
+
+/**
+ * $!{table.comment} Mapper
+ *
+ * @author ${author}
+ * @time ${date}
+ */
+#if(${kotlin})
+interface ${table.mapperName} : ${superMapperClass}<${entity}>
+#else
+public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+
+    /**
+     * @desc $!{table.comment}列表
+     *
+     * @param query
+     * @return java.util.List<${package.vo_packages}.${entity}VO>
+     */
+    List<${entity}VO> list${entity}(@Param("query") ${entity}Query query);
+
+    /**
+     * @desc $!{table.comment}条数
+     *
+     * @param query
+     * @return int
+     */
+    int count${entity}(@Param("query") ${entity}Query query);
+}
+#end

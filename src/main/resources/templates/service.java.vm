@@ -1,0 +1,47 @@
+package ${package.Service};
+
+import ${package.Entity}.${entity};
+import ${superServiceClassPackage};
+import ${package.qo_packages}.${entity}Query;
+import ${package.vo_packages}.${entity}VO;
+import ${package.dto_packages}.${entity}DTO;
+import ${package.base_packages}.common.ActionResult;
+import ${package.base_packages}.common.PageResult;
+
+/**
+ * $!{table.comment} 服务类
+ *
+ * @author ${author}
+ * @time ${date}
+ */
+#if(${kotlin})
+interface ${table.serviceName} : ${superServiceClass}<${entity}>
+#else
+public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+
+    /**
+     * @desc 分页查询
+     *
+     * @param query
+     * @return ${package.base_packages}.common.PageResult<${package.vo_packages}.${entity}VO>
+     */
+    PageResult<${entity}VO> page(${entity}Query query);
+
+    /**
+     * @desc 保存
+     *
+     * @param dto
+     * @return ${package.base_packages}.common.ActionResult
+     */
+    ActionResult<Long> save(${entity}DTO dto);
+
+    /**
+     * @desc 更新
+     *
+     * @param dto
+     * @return ${package.base_packages}.common.ActionResult
+     */
+    ActionResult<Long> update(${entity}DTO dto);
+
+}
+#end
